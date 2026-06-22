@@ -16,6 +16,7 @@
     let searchQuery = '';
     let currentIndex = 0;
     let filteredDesigns = [];
+    let isShuffled = false;
 
     // ============================================================
     // Layout Pattern
@@ -43,20 +44,26 @@
     }
 
     // ============================================================
-    // Render Filter Buttons
+    // Render Filter Buttons with Count Badges
     // ============================================================
     function renderFilterButtons() {
         const container = document.getElementById('filter-buttons');
         const categories = getCategories();
         
+        // Count designs per category
+        const categoryCounts = {};
+        designs.forEach(d => {
+            categoryCounts[d.category] = (categoryCounts[d.category] || 0) + 1;
+        });
+        
         // Clear existing (keep "All" button)
-        container.innerHTML = '<button class="filter-btn active" data-filter="all">All</button>';
+        container.innerHTML = `<button class="filter-btn active" data-filter="all">All <span class="count">${designs.length}</span></button>`;
         
         categories.forEach(cat => {
             const btn = document.createElement('button');
             btn.className = 'filter-btn';
             btn.dataset.filter = cat;
-            btn.textContent = cat;
+            btn.innerHTML = `${cat} <span class="count">${categoryCounts[cat]}</span>`;
             container.appendChild(btn);
         });
 
@@ -92,7 +99,32 @@
             );
         }
 
+        // Apply shuffle if active
+        if (isShuffled) {
+            result = shuffleArray(result);
+        }
+
         return result;
+    }
+
+    // ============================================================
+    // Shuffle Array (Fisher-Yates)
+    // ============================================================
+    function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    // ============================================================
+    // Toggle Shuffle
+    // ============================================================
+    function toggleShuffle() {
+        isShuffled = !isShuffled;
+        renderGallery();
     }
 
     // ============================================================
@@ -182,6 +214,20 @@
             item.style.transitionDelay = `${(i % 5) * 0.1}s`;
             observer.observe(item);
         });
+
+        // Observe hire section
+        const hireSection = document.querySelector('.hire-section');
+        if (hireSection) {
+            const hireObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        hireObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+            hireObserver.observe(hireSection);
+        }
     }
 
     // ============================================================
@@ -289,6 +335,231 @@
     }
 
     // ============================================================
+    // Shuffle Button Handler
+    // ============================================================
+    function initShuffleButton() {
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        if (shuffleBtn) {
+            shuffleBtn.addEventListener('click', () => {
+                toggleShuffle();
+                shuffleBtn.classList.toggle('active', isShuffled);
+            });
+        }
+    }
+
+    // ============================================================
+    // Share Button Handler
+    // ============================================================
+    function initShareButton() {
+        const shareBtn = document.getElementById('share-btn');
+        const shareMenu = document.getElementById('share-menu');
+        
+        if (shareBtn && shareMenu) {
+            shareBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                shareMenu.classList.toggle('open');
+            });
+            
+            // Copy link
+            const copyLink = document.getElementById('copy-link');
+            if (copyLink) {
+                copyLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('overlay-title')?.textContent || 'this design';
+                    const text = `Check out "${title}" on Shibui Archive ✦ @shibuiarchive`;
+                    navigator.clipboard.writeText(text).then(() => {
+                        copyLink.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
+                        setTimeout(() => {
+                            copyLink.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy Link`;
+                        }, 2000);
+                    });
+                });
+            }
+            
+            // Native share (if supported)
+            const shareNative = document.getElementById('share-native');
+            if (shareNative) {
+                shareNative.addEventListener('click', () => {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Shibui Archive',
+                            text: 'Check out this design archive',
+                            url: window.location.href
+                        });
+                    }
+                });
+            }
+            
+            // Close on outside click
+            document.addEventListener('click', () => {
+                shareMenu.classList.remove('open');
+            });
+        }
+    }
+
+    // ============================================================
+    // Back to Top Button
+    // ============================================================
+    function initBackToTop() {
+        const backToTop = document.getElementById('back-to-top');
+        
+        if (backToTop) {
+            // Show/hide on scroll
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+            
+            // Scroll to top on click
+            backToTop.addEventListener('click', () => {
+                window.lenis ? window.lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }
+
+    // ============================================================
+    // About Section Observer
+    // ============================================================
+    function initAboutSection() {
+        const aboutSection = document.querySelector('.about-section');
+        
+        if (aboutSection) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            observer.observe(aboutSection);
+        }
+    }
+
+    // ============================================================
+    // Custom Cursor
+    // ============================================================
+    function initCustomCursor() {
+        const cursor = document.getElementById('custom-cursor');
+        
+        if (!cursor || 'ontouchstart' in window) return; // No cursor on touch devices
+        
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        // Animate cursor
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // Hover states
+        const hoverElements = 'a, button, .gallery-item, .filter-btn, .share-btn';
+        document.querySelectorAll(hoverElements).forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+        
+        // Click effect
+        document.addEventListener('mousedown', () => cursor.classList.add('click'));
+        document.addEventListener('mouseup', () => cursor.classList.remove('click'));
+        
+        // Hide cursor when leaving window
+        document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
+        document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+    }
+
+    // ============================================================
+    // Lightbox Zoom
+    // ============================================================
+    function initLightboxZoom() {
+        const imageWrapper = document.querySelector('.overlay-image-wrapper');
+        const overlayImage = document.getElementById('overlay-image');
+        
+        if (!imageWrapper || !overlayImage) return;
+        
+        let isZoomed = false;
+        let scale = 1;
+        let panX = 0;
+        let panY = 0;
+        let startX, startY;
+        let isDragging = false;
+        
+        imageWrapper.addEventListener('click', (e) => {
+            if (isDragging) return;
+            
+            isZoomed = !isZoomed;
+            imageWrapper.classList.toggle('zoomed', isZoomed);
+            
+            if (isZoomed) {
+                scale = 2;
+                // Center the zoom
+                const rect = imageWrapper.getBoundingClientRect();
+                panX = (rect.width / 2 - e.clientX) * (scale - 1);
+                panY = (rect.height / 2 - e.clientY) * (scale - 1);
+            } else {
+                scale = 1;
+                panX = 0;
+                panY = 0;
+            }
+            
+            updateTransform();
+        });
+        
+        // Pan when zoomed
+        imageWrapper.addEventListener('mousedown', (e) => {
+            if (!isZoomed) return;
+            isDragging = true;
+            startX = e.clientX - panX;
+            startY = e.clientY - panY;
+            imageWrapper.style.cursor = 'grabbing';
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging || !isZoomed) return;
+            panX = e.clientX - startX;
+            panY = e.clientY - startY;
+            updateTransform();
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            if (imageWrapper) {
+                imageWrapper.style.cursor = 'grab';
+            }
+        });
+        
+        function updateTransform() {
+            overlayImage.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+        }
+        
+        // Reset zoom when closing overlay
+        const originalCloseOverlay = closeOverlay;
+        closeOverlay = function() {
+            isZoomed = false;
+            scale = 1;
+            panX = 0;
+            panY = 0;
+            imageWrapper.classList.remove('zoomed');
+            overlayImage.style.transform = '';
+            originalCloseOverlay();
+        };
+    }
+
+    // ============================================================
     // Initialize Gallery
     // ============================================================
     function init() {
@@ -297,6 +568,12 @@
         initSearch();
         initKeyboard();
         initOverlay();
+        initShuffleButton();
+        initShareButton();
+        initBackToTop();
+        initAboutSection();
+        initCustomCursor();
+        initLightboxZoom();
     }
 
     // Run when DOM is ready
