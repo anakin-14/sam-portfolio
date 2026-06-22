@@ -37,7 +37,7 @@ const designs = [
     },
 
     {
-        image: "designs/martysupreme.jpg",
+        image: "designs/Martysupreme.jpg",
         title: "Marty Supreme",
         category: "Poster",
         year: "2026",
