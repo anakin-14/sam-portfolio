@@ -54,5 +54,13 @@ const designs = [
         description: "A conceptual key art poster exploring memory, love, and the beauty of letting go in Eternal Sunshine of the Spotless Mind.",
         alt: "Eternal Sunshine poster design"
     },
-
+{
+        image: "designs/thebear.jpg",
+        title: "The Bear",
+        category: "Poster",
+        year: "2026",
+        featured: false,
+        description: "An editorial interpretation of pressure, perfection, and purpose inside the relentless world of The Bear.",
+        alt: "The Bear poster design"
+    },
 ];
