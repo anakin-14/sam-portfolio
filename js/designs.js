@@ -63,4 +63,13 @@ const designs = [
         description: "An editorial interpretation of pressure, perfection, and purpose inside the relentless world of The Bear.",
         alt: "The Bear poster design"
     },
+    {
+        image: "designs/benstokes.jpg",
+        title: "Ben Stokes",
+        category: "Sports",
+        year: "2026",
+        featured: false,
+        description: "An editorial tribute to Ben Stokes' unforgettable legacy in Test cricket.",
+        alt: "Ben Stokes sports poster design"
+    },
 ];
