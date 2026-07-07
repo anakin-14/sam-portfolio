@@ -72,4 +72,13 @@ const designs = [
         description: "An editorial tribute to Ben Stokes' unforgettable legacy in Test cricket.",
         alt: "Ben Stokes sports poster design"
     },
+    {
+        image: "designs/messi.jpg",
+        title: "Lionel Messi",
+        category: "Sports",
+        year: "2026",
+        featured: false,
+        description: "The greatest footballer of all time. Lionel Messi's legacy is celebrated in this editorial sports poster design",
+        alt: "Lionel Messi sports poster design"
+    },
 ];
