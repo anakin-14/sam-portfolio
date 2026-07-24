@@ -81,4 +81,13 @@ const designs = [
         description: "The greatest footballer of all time. Lionel Messi's legacy is celebrated in this editorial sports poster design",
         alt: "Lionel Messi sports poster design"
     },
+    {
+        image: "designs/odyssey.jpg",
+        title: "Odyssey",
+        category: "Movies",
+        year: "2026",
+        featured: false,
+        description: "A cinematic exploration of adventure and discovery in the spirit of Odysseus's legendary journey.",
+        alt: "Odyssey movie poster design"
+    },
 ];
