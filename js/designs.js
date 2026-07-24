@@ -19,7 +19,7 @@ const designs = [
     {
         image: "designs/fightclub.jpg",
         title: "Fight Club",
-        category: "Poster",
+        category: "Movies",
         year: "2026",
         featured: true,
         description: "A conceptual key art poster exploring the collapse of identity and the chaos within Fight Club.",
@@ -29,7 +29,7 @@ const designs = [
     {
         image: "designs/truedetective.jpg",
         title: "True Detective",
-        category: "Poster",
+        category: "Movies",
         year: "2026",
         featured: false,
         description: "A conceptual key art poster exploring identity, time, and the psychological philosophy of True Detective.",
@@ -39,7 +39,7 @@ const designs = [
     {
         image: "designs/Martysupreme.jpg",
         title: "Marty Supreme",
-        category: "Poster",
+        category: "Movies",
         year: "2026",
         featured: false,
         description: "A conceptual key art poster inspired by Marty Supreme, capturing ambition, style, and the relentless pursuit of greatness."
@@ -48,7 +48,7 @@ const designs = [
     {
         image: "designs/EternalSunshine.jpg",
         title: "Eternal Sunshine of the Spotless Mind",
-        category: "Poster",
+        category: "Movies",
         year: "2026",
         featured: false,
         description: "A conceptual key art poster exploring memory, love, and the beauty of letting go in Eternal Sunshine of the Spotless Mind.",
@@ -57,7 +57,7 @@ const designs = [
 {
         image: "designs/thebear.jpg",
         title: "The Bear",
-        category: "Poster",
+        category: "Movies",
         year: "2026",
         featured: false,
         description: "An editorial interpretation of pressure, perfection, and purpose inside the relentless world of The Bear.",
